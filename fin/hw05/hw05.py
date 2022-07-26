@@ -1,7 +1,12 @@
 
 
 
-class VendingMachine:
+from cProfile import label
+from inspect import trace
+import numbers
+
+
+class VendingMachine():
     """A vending machine that vends some product for some price.
 
     >>> v = VendingMachine('candy', 10)
@@ -38,7 +43,43 @@ class VendingMachine:
     >>> w.vend()
     'Here is your soda.'
     """
-    "*** YOUR CODE HERE ***"
+
+    balance = 0
+    stock = 0
+    def __init__(self, product, price) -> None:
+        self.product = product
+        self.price = price
+
+
+    def add_funds(self, amount):
+        pass
+
+    def vend(self):
+        if self.stock > 0:
+            if self.balance >= self.price:
+                self.stock -= 1
+                remainingBalance = self.balance - self.price
+                self.balance = 0
+                if remainingBalance == 0:
+                    return 'Here is your {}.'.format(self.product)
+                return 'Here is your {} and ${} change.'.format(self.product, remainingBalance)
+            elif self.balance < self.price:
+                return 'You must add ${} more funds.'.format(self.price - self.balance)
+        else:
+            if self.balance > 0:
+                return 'Machine is out of stock. Here is your ${}.'.format(self.balance)
+            return 'Machine is out of stock.'
+
+    def add_funds(self, amount):
+        if self.stock == 0:
+            return 'Machine is out of stock. Here is your ${}.'.format(amount)
+        else:
+            self.balance += amount
+            return 'Current balance: ${}'.format(self.balance)
+
+    def restock(self, amount):
+        self.stock += amount
+        return 'Current {} stock: {}'.format(self.product, self.stock)
 
 def preorder(t):
     """Return a list of the entries in this tree in the order that they
@@ -50,7 +91,11 @@ def preorder(t):
     >>> preorder(Tree(2, [Tree(4, [Tree(6)])]))
     [2, 4, 6]
     """
-    "*** YOUR CODE HERE ***"
+    labels = []
+    labels.append(t.label)
+    for branch in t.branches:
+        labels += preorder(branch)
+    return labels
 
 def store_digits(n):
     """Stores the digits of a positive number n in a linked list.
@@ -63,7 +108,10 @@ def store_digits(n):
     >>> store_digits(876)
     Link(8, Link(7, Link(6)))
     """
-    "*** YOUR CODE HERE ***"
+    strN = str(n)
+    if len(strN) == 1:
+        return Link(int(strN[0]))
+    return Link(int(strN[0]), store_digits(int(strN[1:])))
 
 def generate_paths(t, value):
     """Yields all possible paths from the root of t to a node with the label value
@@ -100,12 +148,15 @@ def generate_paths(t, value):
     [[0, 2], [0, 2, 1, 2]]
     """
 
-    "*** YOUR CODE HERE ***"
+    path = [t.label]
 
-    for _______________ in _________________:
-        for _______________ in _________________:
+    if path == [value]:
+        yield path
+    
+    for b in t.branches:
+        for p in generate_paths(b, value):
+            yield path + p
 
-            "*** YOUR CODE HERE ***"
 
 ## Optional Questions
 def is_bst(t):
@@ -133,7 +184,9 @@ def is_bst(t):
     >>> is_bst(t7)
     False
     """
-    "*** YOUR CODE HERE ***"
+    
+    def search()
+
 class Mint:
     """A mint creates coins by stamping on years.
 
