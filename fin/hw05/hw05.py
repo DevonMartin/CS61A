@@ -4,6 +4,9 @@
 from cProfile import label
 from inspect import trace
 import numbers
+from os import remove
+from telnetlib import TN3270E
+from turtle import update
 
 
 class VendingMachine():
@@ -184,8 +187,30 @@ def is_bst(t):
     >>> is_bst(t7)
     False
     """
+
+    def bst_max(t):
+        if t.is_leaf():
+            return t.label
+        return max(bst_max(t.branches[-1]), t.label)
+        
+
+    def bst_min(t):
+        if t.is_leaf():
+            return t.label
+        return min(bst_min(t.branches[0]), t.label)
+
+    if t.is_leaf():
+        return True
     
-    def search()
+    b, l = t.branches, t.label
+
+    if len(b) == 1:
+        return is_bst(b[0]) and (l >= bst_min(b[0]) or l < bst_max(b[0]))
+    
+    if len(b) == 2:
+        return is_bst(b[0]) and is_bst(b[1]) and bst_max(b[0]) <= l and bst_min(b[1]) > l
+    
+    return False
 
 class Mint:
     """A mint creates coins by stamping on years.
@@ -223,23 +248,25 @@ class Mint:
         self.update()
 
     def create(self, kind):
-        "*** YOUR CODE HERE ***"
+        return kind(self.year)
 
     def update(self):
-        "*** YOUR CODE HERE ***"
+        self.year = Mint.current_year
 
 class Coin:
     def __init__(self, year):
         self.year = year
 
     def worth(self):
-        "*** YOUR CODE HERE ***"
+        addition = max(Mint.current_year - self.year - 50, 0)
+        return self.cents + addition
 
 class Nickel(Coin):
     cents = 5
 
 class Dime(Coin):
     cents = 10
+
 def remove_all(link , value):
     """Remove all the nodes containing value in link. Assume that the
     first element is never removed.
@@ -257,7 +284,18 @@ def remove_all(link , value):
     >>> print(l1)
     <0 1>
     """
-    "*** YOUR CODE HERE ***"
+    
+    if link.rest == link.empty:
+        return
+    
+    if link.rest.first == value:
+        link.rest = link.rest.rest
+        return remove_all(link, value)
+
+    
+    return remove_all(link.rest, value)
+
+
 def deep_map(f, link):
     """Return a Link with the same structure as link but with fn mapped over
     its elements. If an element is an instance of a linked list, recursively
@@ -271,7 +309,29 @@ def deep_map(f, link):
     >>> print(deep_map(lambda x: 2 * x, Link(s, Link(Link(Link(5))))))
     <<2 <4 6> 8> <<10>>>
     """
-    "*** YOUR CODE HERE ***"
+
+    link2 = cur = Link(link.first, link.rest)
+
+    def update_link(cur):
+    
+        if cur == Link.empty:
+            return
+            
+        if isinstance(cur.rest, Link):
+            cur.rest = Link(cur.rest.first, cur.rest.rest)
+
+        if isinstance(cur.first, Link):
+            cur.first = Link(cur.first.first, cur.first.rest)
+            update_link(cur.first)
+            update_link(cur.rest)
+        else:
+            cur.first = f(cur.first)
+            update_link(cur.rest)
+
+    update_link(cur)    
+    return link2
+
+
 
 ## Link Class ##
 
