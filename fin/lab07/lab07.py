@@ -3,6 +3,9 @@
 
 # Linked Lists
 
+from re import L
+
+
 def link_to_list(link):
     """Takes a linked list and returns a Python list with the same elements.
 
@@ -12,7 +15,24 @@ def link_to_list(link):
     >>> link_to_list(Link.empty)
     []
     """
-    "*** YOUR CODE HERE ***"
+
+    l = []
+
+    while link:
+        l.append(link.first)
+        link = link.rest
+
+    return l
+
+    l = []
+
+    def l2l(link):
+        if link:
+            l.append(link.first)
+            l2l(link.rest)
+    
+    l2l(link)
+    return l
 
 # Trees
 
@@ -25,7 +45,31 @@ def cumulative_mul(t):
     >>> t
     Tree(105, [Tree(15, [Tree(5)]), Tree(7)])
     """
-    "*** YOUR CODE HERE ***"
+
+    def apply_mul(t=t):
+
+        muls = []
+        
+        if t.is_leaf():
+            muls.append(t.label)
+            return muls
+
+        for b in t.branches:
+            muls.extend(apply_mul(b))
+
+        multiplier = 1
+        if muls[0]:
+            for mul in muls:
+                multiplier *= mul
+
+        muls.append(t.label)
+
+        t.label *= multiplier
+
+        return muls
+
+    apply_mul()
+    
 
 # Link List Class
 class Link:
@@ -96,7 +140,7 @@ class Tree:
         return 'Tree({0}{1})'.format(self.label, branch_str)
     def __str__(self):
         def print_tree(t, indent=0):
-            tree_str = '  ' * indent + str(t.label) + "\n"
+            tree_str = ' ' * indent + str(t.label) + "\n"
             for b in t.branches:
                 tree_str += print_tree(b, indent + 1)
             return tree_str
@@ -116,7 +160,13 @@ def has_cycle(link):
     >>> has_cycle(u)
     False
     """
-    "*** YOUR CODE HERE ***"
+    links = []
+    while link:
+        if link in links:
+            return True
+        links.append(link)
+        link = link.rest
+    return False
 
 def has_cycle_constant(link):
     """Return whether link contains a cycle.
@@ -129,7 +179,13 @@ def has_cycle_constant(link):
     >>> has_cycle_constant(t)
     False
     """
-    "*** YOUR CODE HERE ***"
+    links = []
+    while link:
+        if link in links:
+            return True
+        links.append(link)
+        link = link.rest
+    return False
 
 def reverse_other(t):
     """Mutates the tree such that nodes on every other (odd-depth) level
@@ -144,4 +200,4 @@ def reverse_other(t):
     >>> t
     Tree(1, [Tree(8, [Tree(3, [Tree(5), Tree(4)]), Tree(6, [Tree(7)])]), Tree(2)])
     """
-    "*** YOUR CODE HERE ***"
+    print(t)
