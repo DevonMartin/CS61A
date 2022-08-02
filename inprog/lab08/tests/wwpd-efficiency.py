@@ -5,7 +5,7 @@ test = {
     {
       'cases': [
         {
-          'answer': '6f968a7981449f66717a39a4fb8e2b85',
+          'answer': 'Linear',
           'choices': [
             'Logarithmic',
             'Linear',
@@ -13,7 +13,7 @@ test = {
             'Exponential'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           What is the order of growth of `is_prime` in terms of `n`?
           
@@ -25,7 +25,7 @@ test = {
           """
         },
         {
-          'answer': '2c6cd1fa356c89d41c835e6864176471',
+          'answer': 'Quadratic',
           'choices': [
             'Logarithmic',
             'Linear',
@@ -33,7 +33,7 @@ test = {
             'Exponential'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           What is the order of growth of `bar` in terms of `n`?
           

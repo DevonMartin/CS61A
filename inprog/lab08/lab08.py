@@ -16,14 +16,14 @@ def insert(link, value, index):
     >>> insert(link, 4, 5)
     IndexError
     """
-    if ____________________:
-        ____________________
-        ____________________
-        ____________________
-    elif ____________________:
-        ____________________
+    if index == 0:
+        newLink = Link(link.first, link.rest)
+        link.rest = newLink
+        link.first = value
+    elif link.rest:
+        insert(link.rest, value, index-1)
     else:
-        ____________________
+        raise IndexError
 
 
 
@@ -37,7 +37,10 @@ def insert_into_all(item, nested_list):
     >>> insert_into_all(0, nl)
     [[0], [0, 1, 2], [0, 3]]
     """
-    return ______________________________
+    for list in nested_list:
+        list.insert(item, 0)
+    return nested_list
+    
 
 def subseqs(s):
     """Assuming that S is a list, return a nested list of all subsequences
@@ -49,11 +52,20 @@ def subseqs(s):
     >>> subseqs([])
     [[]]
     """
-    if ________________:
-        ________________
-    else:
-        ________________
-        ________________
+    s.sort()
+    lists = [[]]
+    for num in s:
+        lists.append([num])
+    for list in lists:
+        if list:
+            for num in s:
+                if num not in list and num > list[-1]:
+                    lists.append(list + [num])
+
+    return lists
+        
+
+
 def inc_subseqs(s):
     """Assuming that S is a list, return a nested list of all subsequences
     of S (a list of lists) for which the elements of the subsequence
@@ -68,16 +80,18 @@ def inc_subseqs(s):
     >>> sorted(seqs2)
     [[], [1], [1], [1, 1], [1, 1, 2], [1, 2], [1, 2], [2]]
     """
-    def subseq_helper(s, prev):
-        if not s:
-            return ____________________
-        elif s[0] < prev:
-            return ____________________
-        else:
-            a = ______________________
-            b = ______________________
-            return insert_into_all(________, ______________) + ________________
-    return subseq_helper(____, ____)
+    lists = [[]]
+    for num in s:
+        lists.append([num])
+    for list in lists:
+        if list:
+            for i in range(len(s)):
+                if s[i] not in list and s[i] >= list[-1] and i > s.index(list[-1]):
+                    lists.append(list + [s[i]])
+
+    return lists
+
+
 
 # Generators
 def permutations(seq):
