@@ -37,9 +37,7 @@ def insert_into_all(item, nested_list):
     >>> insert_into_all(0, nl)
     [[0], [0, 1, 2], [0, 3]]
     """
-    for list in nested_list:
-        list.insert(item, 0)
-    return nested_list
+    return [[item] + list for list in nested_list]
     
 
 def subseqs(s):
@@ -52,17 +50,11 @@ def subseqs(s):
     >>> subseqs([])
     [[]]
     """
-    s.sort()
-    lists = [[]]
-    for num in s:
-        lists.append([num])
-    for list in lists:
-        if list:
-            for num in s:
-                if num not in list and num > list[-1]:
-                    lists.append(list + [num])
-
-    return lists
+    if not s:
+        return [s]
+    else:
+        sub = subseqs(s[1:])
+        return sub + insert_into_all(s[0], sub)
         
 
 
@@ -80,18 +72,30 @@ def inc_subseqs(s):
     >>> sorted(seqs2)
     [[], [1], [1], [1, 1], [1, 1, 2], [1, 2], [1, 2], [2]]
     """
-    lists = [[]]
-    for num in s:
-        lists.append([num])
-    for list in lists:
-        if list:
-            for i in range(len(s)):
-                if s[i] not in list and s[i] >= list[-1] and i > s.index(list[-1]):
-                    lists.append(list + [s[i]])
+    # if not s:
+    #     return [s]
+    # else:
+    #     subs = subseqs(s[1:])
+    #     subs += insert_into_all(s[0], subs)
+    #     subsCopy = subs[:]
+    #     for i in range(len(subs)):
+    #         for j in range(len(subs[i]) - 1):
+    #             if subs[i][j] > subs[i][j + 1]:
+    #                 subsCopy.remove(subs[i])
+    #                 break
 
-    return lists
+    #     return subsCopy
 
-
+    def subseq_helper(s, prev):
+        if not s:
+            return [s]
+        elif s[0] < prev:
+            return subseq_helper(s[1:], prev)
+        else:
+            a = subseq_helper(s[1:], s[0])
+            b = subseq_helper(s[1:], prev)
+            return insert_into_all(s[0], a) + b
+    return subseq_helper(s, float('-inf'))
 
 # Generators
 def permutations(seq):
@@ -116,12 +120,12 @@ def permutations(seq):
     >>> sorted(permutations("ab"))
     [['a', 'b'], ['b', 'a']]
     """
-    if ____________________:
-        yield ____________________
+    if len(seq) == 1:
+        yield seq
     else:
-        for perm in _____________________:
-            for _____ in ________________:
-                _________________________
+        for perm in permutations([x for x in seq if x != seq[0]]):
+            for i in range(len(perm) + 1):
+                yield perm[:i] + [seq[0]] + perm[i:]
 
 # Tree class
 class Tree:
@@ -277,27 +281,27 @@ class Keyboard:
     """
 
     def __init__(self, *args):
-        ________________
-        for _________ in ________________:
-            ________________
+        self.buttons = {}
+        for b in args:
+            self.buttons[b.pos] = b
 
     def press(self, info):
         """Takes in a position of the button pressed, and
         returns that button's output"""
-        if ____________________:
-            ________________
-            ________________
-            ________________
-            ________________
-        ________________
+        if info in self.buttons:
+            b = self.buttons[info]
+            b.times_pressed += 1
+            return b.key
+            # ________________
+        return ""
 
     def typing(self, typing_input):
         """Takes in a list of positions of buttons pressed, and
         returns the total output"""
-        ________________
-        for ________ in ____________________:
-            ________________
-        ________________
+        output = ""
+        for i in typing_input:
+            output += self.press(i)
+        return output
 
 # Nonlocal
 def make_advanced_counter_maker():
@@ -329,15 +333,27 @@ def make_advanced_counter_maker():
     >>> tom_counter('global-count')
     1
     """
-    ________________
-    def ____________(__________):
-        ________________
-        def ____________(__________):
-            ________________
+    globalCount = 0
+    def make_counter():
+        count = 0
+        def interact(action: str) -> int:
             "*** YOUR CODE HERE ***"
             # as many lines as you want
-        ________________
-    ________________
+            nonlocal globalCount, count
+            if action == 'count':
+                count += 1
+                return count
+            if action == 'global-count':
+                globalCount += 1
+                return globalCount
+            if action == 'reset':
+                count = 0
+                return
+            if action == 'global-reset':
+                globalCount = 0
+                return
+        return interact
+    return make_counter
 
 # Mutable Lists
 def trade(first, second):
@@ -369,9 +385,9 @@ def trade(first, second):
     """
     m, n = 1, 1
 
-    equal_prefix = lambda: ______________________
-    while _______________________________:
-        if __________________:
+    equal_prefix = lambda: sum(first[:m]) == sum(second[:n])
+    while m < len(first) and n < len(second) and sum(first[:m]) != sum(second[:n]):
+        if sum(first[:m]) < sum(second[:n]):
             m += 1
         else:
             n += 1
@@ -406,11 +422,11 @@ def shuffle(cards):
     ['A♡', 'A♢', 'A♤', 'A♧', '2♡', '2♢', '2♤', '2♧', '3♡', '3♢', '3♤', '3♧']
     """
     assert len(cards) % 2 == 0, 'len(cards) must be even'
-    half = _______________
+    half = len(cards) // 2
     shuffled = []
-    for i in _____________:
-        _________________
-        _________________
+    for i in range(half):
+        shuffled.append(cards[i])
+        shuffled.append(cards[half:][i])
     return shuffled
 
 # Recursive Objects
@@ -428,12 +444,12 @@ def deep_len(lnk):
     >>> deep_len(levels)
     5
     """
-    if ______________:
+    if not isinstance(lnk, Link):
         return 0
-    elif ______________:
-        return 1
+    elif type(lnk.first) == int:
+        return 1 + deep_len(lnk.rest)
     else:
-        return _________________________
+        return deep_len(lnk.first) + deep_len(lnk.rest)
 
 def make_to_string(front, mid, back, empty_repr):
     """ Returns a function that turns linked lists to strings.
@@ -451,11 +467,12 @@ def make_to_string(front, mid, back, empty_repr):
     '()'
     """
     def printer(lnk):
-        if ______________:
-            return _________________________
+        if isinstance(lnk, Link):
+            return f'{front}{lnk.first}{mid}{printer(lnk.rest)}{back}'
         else:
-            return _________________________
+            return f'{empty_repr}'
     return printer
+
 def prune_small(t, n):
     """Prune the tree mutatively, keeping only the n branches
     of each node with the smallest label.
@@ -473,11 +490,7 @@ def prune_small(t, n):
     >>> t3
     Tree(6, [Tree(1), Tree(3, [Tree(1), Tree(2)])])
     """
-    while ___________________________:
-        largest = max(_______________, key=____________________)
-        _________________________
-    for __ in _____________:
-        ___________________
+    
 
 # Recursion / Tree Recursion
 def num_trees(n):
@@ -500,9 +513,7 @@ def num_trees(n):
     429
 
     """
-    if ____________________:
-        return _______________
-    return _______________
+    
 
 
 # Tree class
