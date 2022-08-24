@@ -2,6 +2,7 @@ try:
     import readline  # history and arrow keys for CLI
 except ImportError:
     pass  # but not everyone has it
+from decimal import DivisionByZero
 import sys
 
 from reader import read
@@ -31,3 +32,5 @@ if __name__ == '__main__':
         except (KeyboardInterrupt, EOFError):  # Ctrl-C, Ctrl-D
             print()  # blank line
             break  # exit while loop (and end program)
+        except ZeroDivisionError as err:
+            print(type(err).__name__ + ':', err)
