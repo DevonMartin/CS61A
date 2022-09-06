@@ -135,13 +135,14 @@ def scheme_read(src):
         # END PROBLEM 1
     elif val == '(':
         # BEGIN PROBLEM 1
-        return Pair(val, scheme_read(src))
+        return read_tail(src)
         # END PROBLEM 1
     elif val == "'":
         # BEGIN PROBLEM 6
-        return f"{val}"
+        print("What")
         # END PROBLEM 6
     elif val not in DELIMITERS:
+        print("DEBUG: Returning val:", val)
         return val
     else:
         raise SyntaxError('unexpected token: {0}'.format(val))
@@ -154,16 +155,20 @@ def read_tail(src):
     Pair(2, Pair(3, nil))
     """
     try:
-        val = src.pop_first()
-        if val is None:
+        # print("DEBUG: src.current(): ", src.current())
+        if src.current() is None:
             raise SyntaxError('unexpected end of file')
-        elif val == ')':
+        elif src.current() == ')':
             # BEGIN PROBLEM 1
+            # print("DEBUG: nil")
+            src.pop_first()
             return nil
             # END PROBLEM 1
         else:
             # BEGIN PROBLEM 1
-            return Pair(val, scheme_read(src))
+            first = scheme_read(src)
+            rest = read_tail(src)
+            return Pair(first, rest)
             # END PROBLEM 1
     except EOFError:
         raise SyntaxError('unexpected end of file')
