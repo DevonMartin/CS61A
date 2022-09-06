@@ -142,7 +142,7 @@ def scheme_read(src):
         print("What")
         # END PROBLEM 6
     elif val not in DELIMITERS:
-        print("DEBUG: Returning val:", val)
+        # print("DEBUG: Returning val:", val)
         return val
     else:
         raise SyntaxError('unexpected token: {0}'.format(val))

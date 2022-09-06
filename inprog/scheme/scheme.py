@@ -36,7 +36,7 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
         return SPECIAL_FORMS[first](rest, env)
     else:
         # BEGIN PROBLEM 4
-        "*** YOUR CODE HERE ***"
+        validate_procedure(p)
         # END PROBLEM 4
 
 def self_evaluating(expr):
@@ -158,7 +158,12 @@ class BuiltinProcedure(Procedure):
         # Convert a Scheme list to a Python list
         python_args = []
         # BEGIN PROBLEM 3
-        "*** YOUR CODE HERE ***"
+        while args:
+            python_args.append(args.first)
+            args = args.rest
+
+        if self.use_env:
+            python_args.append(env)
         # END PROBLEM 3
         try:
             return self.fn(*python_args)
