@@ -39,40 +39,24 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
         return SPECIAL_FORMS[first](rest, env)
     else:
         # BEGIN PROBLEM 4
-        try:
-            operator = env.lookup(first)
-        except:
-            operator = False
-        if operator and not _:
-            validate_procedure(operator)
-            return scheme_apply(operator, scheme_eval(rest, env, 1), env)
-
         if isinstance(first, Pair):
-            first = scheme_eval(first, env)
-        elif not (scheme_symbolp(first) or self_evaluating(first)) or not _:
-            raise SchemeError("Non-valid")
-
-        try:
+            operator = scheme_eval(first, env)
+        else:
             operator = env.lookup(first)
-        except:
-            operator = False
-        if operator and not _:
-            validate_procedure(operator)
-            return scheme_apply(operator, scheme_eval(rest, env, 1), env)
-        
-        return Pair(first, scheme_eval(rest, env, 1))
-        # END PROBLEM 4
+        validate_procedure(operator)
 
-# from scheme_reader import *
-# from scheme import *
-# global_frame = create_global_frame()     
-# def scheme_print_return(val1, val2):
-#     print(repl_str(val1))
-#     return val2
-# global_frame.define('print-then-return',
-#          BuiltinProcedure(scheme_print_return, False, 'print-then-return'))
-# expr = read_line('((print-then-return 1 +) 1 2)')
-# scheme_eval(expr, global_frame) # operator should only be evaluated once
+        operands = nil
+        if len(expr) > 1:
+            l = len(expr)
+            while l > 1:
+                tmp = rest
+                for i in range(l - 2):
+                    tmp = tmp.rest
+                operands = Pair(scheme_eval(tmp.first, env), operands)
+                l -= 1
+
+        return scheme_apply(operator, operands, env)
+        # END PROBLEM 4
 
 def self_evaluating(expr):
     """Return whether EXPR evaluates to itself."""
@@ -275,12 +259,14 @@ def do_define_form(expressions, env):
     >>> scheme_eval(read_line("(f 3)"), env)
     5
     """
+
     validate_form(expressions, 2) # Checks that expressions is a list of length at least 2
     target = expressions.first
     if scheme_symbolp(target): 
         validate_form(expressions, 2, 2) # Checks that expressions is a list of length exactly 2
         # BEGIN PROBLEM 5
-        "*** YOUR CODE HERE ***"
+        env.define(target, scheme_eval(expressions.rest.first, env))
+        return target
         # END PROBLEM 5
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
         # BEGIN PROBLEM 9
