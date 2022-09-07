@@ -12,6 +12,9 @@ from ucb import main, trace
 # Eval/Apply #
 ##############
 
+def debug(s=""):
+    print(f"DEBUG: {s}")
+
 
 def scheme_eval(expr, env, _=None): # Optional third argument is ignored
     """Evaluate Scheme expression EXPR in environment ENV.
@@ -36,17 +39,40 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
         return SPECIAL_FORMS[first](rest, env)
     else:
         # BEGIN PROBLEM 4
-        operator = False
         try:
             operator = env.lookup(first)
         except:
-            pass
-        if operator:
+            operator = False
+        if operator and not _:
             validate_procedure(operator)
-            return rest.map(operator)
-            # return scheme_apply(operator, scheme_eval(rest, env), env)
-        return [first, scheme_eval(rest, env)]
+            return scheme_apply(operator, scheme_eval(rest, env, 1), env)
+
+        if isinstance(first, Pair):
+            first = scheme_eval(first, env)
+        elif not (scheme_symbolp(first) or self_evaluating(first)) or not _:
+            raise SchemeError("Non-valid")
+
+        try:
+            operator = env.lookup(first)
+        except:
+            operator = False
+        if operator and not _:
+            validate_procedure(operator)
+            return scheme_apply(operator, scheme_eval(rest, env, 1), env)
+        
+        return Pair(first, scheme_eval(rest, env, 1))
         # END PROBLEM 4
+
+# from scheme_reader import *
+# from scheme import *
+# global_frame = create_global_frame()     
+# def scheme_print_return(val1, val2):
+#     print(repl_str(val1))
+#     return val2
+# global_frame.define('print-then-return',
+#          BuiltinProcedure(scheme_print_return, False, 'print-then-return'))
+# expr = read_line('((print-then-return 1 +) 1 2)')
+# scheme_eval(expr, global_frame) # operator should only be evaluated once
 
 def self_evaluating(expr):
     """Return whether EXPR evaluates to itself."""
