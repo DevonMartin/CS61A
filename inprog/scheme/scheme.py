@@ -360,7 +360,7 @@ def do_and_form(expressions, env):
     while expressions:
         first = scheme_eval(expressions.first, env)
         debug(first)
-        if first is False:
+        if is_false_primitive(first):
             return False
         if expressions.rest == nil:
             return first
@@ -384,7 +384,7 @@ def do_or_form(expressions, env):
     # BEGIN PROBLEM 12
     while expressions:
         first = scheme_eval(expressions.first, env)
-        if first is not False:
+        if is_true_primitive(first):
             return first
         expressions = expressions.rest
     return False
@@ -407,7 +407,9 @@ def do_cond_form(expressions, env):
             test = scheme_eval(clause.first, env)
         if is_true_primitive(test):
             # BEGIN PROBLEM 13
-            "*** YOUR CODE HERE ***"
+            if clause.rest is not nil:
+                return eval_all(clause.rest, env)
+            return test
             # END PROBLEM 13
         expressions = expressions.rest
 
