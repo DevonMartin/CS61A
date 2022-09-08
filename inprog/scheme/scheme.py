@@ -259,7 +259,6 @@ def do_define_form(expressions, env):
     >>> scheme_eval(read_line("(f 3)"), env)
     5
     """
-
     validate_form(expressions, 2) # Checks that expressions is a list of length at least 2
     target = expressions.first
     if scheme_symbolp(target): 
@@ -285,7 +284,7 @@ def do_quote_form(expressions, env):
     """
     validate_form(expressions, 1, 1)
     # BEGIN PROBLEM 6
-    "*** YOUR CODE HERE ***"
+    return expressions.first
     # END PROBLEM 6
 
 def do_begin_form(expressions, env):
