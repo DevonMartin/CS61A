@@ -222,7 +222,6 @@ class LambdaProcedure(Procedure):
         of values, for a lexically-scoped call evaluated in environment ENV."""
         # BEGIN PROBLEM 11
         return self.env.make_child_frame(self.formals, args)
-
         # END PROBLEM 11
 
     def __str__(self):
@@ -358,7 +357,15 @@ def do_and_form(expressions, env):
     False
     """
     # BEGIN PROBLEM 12
-    "*** YOUR CODE HERE ***"
+    while expressions:
+        first = scheme_eval(expressions.first, env)
+        debug(first)
+        if first is False:
+            return False
+        if expressions.rest == nil:
+            return first
+        expressions = expressions.rest
+    return True
     # END PROBLEM 12
 
 def do_or_form(expressions, env):
@@ -375,7 +382,12 @@ def do_or_form(expressions, env):
     6
     """
     # BEGIN PROBLEM 12
-    "*** YOUR CODE HERE ***"
+    while expressions:
+        first = scheme_eval(expressions.first, env)
+        if first is not False:
+            return first
+        expressions = expressions.rest
+    return False
     # END PROBLEM 12
 
 def do_cond_form(expressions, env):
