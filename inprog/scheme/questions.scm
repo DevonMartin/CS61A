@@ -8,9 +8,21 @@
 ;; Returns a list of two-element lists
 (define (enumerate s)
   ; BEGIN PROBLEM 15
-    (let ((x 0))
-        
+    (define x 0)
+    (define l (list))
+    (define (f s x l)
+        (cond 
+            (
+                (not (null? s))
+                (define l (append l (list (list x (car s)))))
+                (define x (+ x 1))
+                (define s (cdr s))
+                (f s x l)
+            )
+            (else l)
+        )
     )
+    (f s x l)
 )
   ; END PROBLEM 15
 
