@@ -359,7 +359,6 @@ def do_and_form(expressions, env):
     # BEGIN PROBLEM 12
     while expressions:
         first = scheme_eval(expressions.first, env)
-        debug(first)
         if is_false_primitive(first):
             return False
         if expressions.rest == nil:
@@ -433,7 +432,17 @@ def make_let_frame(bindings, env):
         raise SchemeError('bad bindings list in let form')
     names, values = nil, nil
     # BEGIN PROBLEM 14
-    "*** YOUR CODE HERE ***"
+    validate_form(bindings.first, 2, 2)
+    names = Pair(bindings.first.first, nil)
+    values = Pair(scheme_eval(bindings.first.rest.first, env), nil)
+    tmp_n, tmp_v = names, values
+    while bindings.rest is not nil:
+        bindings = bindings.rest
+        validate_form(bindings.first, 2, 2)
+        tmp_n.rest = Pair(bindings.first.first, nil)
+        tmp_v.rest = Pair(scheme_eval(bindings.first.rest.first, env), nil)
+        tmp_n, tmp_v = tmp_n.rest, tmp_v.rest
+    validate_formals(names)
     # END PROBLEM 14
     return env.make_child_frame(names, values)
     
