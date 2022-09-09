@@ -9,20 +9,20 @@
 (define (enumerate s)
   ; BEGIN PROBLEM 15
     (define x 0)
-    (define l (list))
-    (define (f s x l)
+    (define l '())
+    (define (helper_func s x l)
         (cond 
             (
                 (not (null? s))
                 (define l (append l (list (list x (car s)))))
                 (define x (+ x 1))
                 (define s (cdr s))
-                (f s x l)
+                (helper_func s x l)
             )
             (else l)
         )
     )
-    (f s x l)
+    (helper_func s x l)
 )
   ; END PROBLEM 15
 
@@ -32,8 +32,33 @@
 ;; the merged lists.
 (define (merge comp list1 list2)
   ; BEGIN PROBLEM 16
-  'replace-this-line
-  )
+    (define list3 '())
+    (define (helper_func comp list1 list2 list3)
+        (cond
+            (
+                (and (not (null? list1)) (not (null? list2)))
+                (cond
+                    (
+                        (comp (car list1) (car list2))
+                        (define list3 (append list3 (list (car list1) (car list2))))
+                    )
+                    (else
+                        (define list3 (append list3 (list (car list2) (car list1))))
+                    )
+                )
+                (define list1 (cdr list1))
+                (define list2 (cdr list2))
+                (helper_func comp list1 list2 list3)
+            )
+            (else 
+                (define list3 (append list3 list1))
+                (define list3 (append list3 list2))
+                list3
+            )
+        )
+    )
+    (helper_func comp list1 list2 list3)
+)
   ; END PROBLEM 16
 
 
