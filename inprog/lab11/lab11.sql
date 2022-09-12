@@ -56,12 +56,12 @@ CREATE TABLE smallest_int_having AS
   SELECT time, smallest FROM students WHERE smallest > 2 GROUP BY smallest HAVING COUNT(*) = 1;
 
 CREATE TABLE sp20favpets AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT pet, COUNT(*) FROM students GROUP BY pet ORDER BY -COUNT(*) LIMIT 10;
 
 
 CREATE TABLE sp20dog AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT pet, COUNT(*) FROM students WHERE pet = "dog";
 
 
 CREATE TABLE obedienceimages AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT seven, instructor, COUNT(*) FROM students WHERE seven = '7' GROUP BY instructor;
