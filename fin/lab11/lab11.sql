@@ -12,11 +12,11 @@ CREATE TABLE smallest_int AS
        LIMIT 20;
 
 CREATE TABLE matchmaker AS
-  SELECT a.pet, a.song, a.color, b.color
-    FROM students as a, students as b
-   WHERE a.pet = b.pet 
-     AND a.song = b.song
-     AND a.time < b.time;
+      SELECT a.pet, a.song, a.color, b.color
+        FROM students as a, students as b
+       WHERE a.pet = b.pet 
+         AND a.song = b.song
+         AND a.time < b.time;
 
 CREATE TABLE parents AS
   SELECT "abraham" AS parent, "barack" AS child UNION
@@ -46,22 +46,48 @@ CREATE TABLE sizes AS
 -- Ways to stack 4 dogs to a height of at least 170, ordered by total height
 CREATE TABLE stacks_helper(dogs, stack_height, last_height);
 
--- Add your INSERT INTOs here
+INSERT INTO stacks_helper 
+     SELECT name, height, height
+       FROM dogs 
+      ORDER BY height DESC
+      LIMIT (SELECT COUNT(*) FROM dogs) - 3;
+
+INSERT INTO stacks_helper
+     SELECT dogs || ", " || 
+            (SELECT name
+               FROM dogs
+              WHERE height < last_height
+              ORDER BY height DESC),
+            1, 1
+       FROM stacks_helper;
 
 
 CREATE TABLE stacks AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+      SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
 
 CREATE TABLE smallest_int_having AS
-  SELECT time, smallest FROM students WHERE smallest > 2 GROUP BY smallest HAVING COUNT(*) = 1;
+      SELECT time, smallest 
+        FROM students 
+       WHERE smallest > 2 
+       GROUP BY smallest 
+      HAVING COUNT(*) = 1;
 
 CREATE TABLE sp20favpets AS
-  SELECT pet, COUNT(*) FROM students GROUP BY pet ORDER BY -COUNT(*) LIMIT 10;
+      SELECT pet, COUNT(*) 
+        FROM students 
+       GROUP BY pet 
+       ORDER BY -COUNT(*) 
+       LIMIT 10;
 
 
 CREATE TABLE sp20dog AS
-  SELECT pet, COUNT(*) FROM students WHERE pet = "dog";
+  SELECT pet, COUNT(*) 
+    FROM students 
+   WHERE pet = "dog";
 
 
 CREATE TABLE obedienceimages AS
-  SELECT seven, instructor, COUNT(*) FROM students WHERE seven = '7' GROUP BY instructor;
+  SELECT seven, instructor, COUNT(*) 
+    FROM students 
+   WHERE seven = '7' 
+   GROUP BY instructor;
