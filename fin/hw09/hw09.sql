@@ -39,8 +39,17 @@ CREATE TABLE by_parent_height AS
 
 -- Filling out this helper table is optional
 CREATE TABLE siblings AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+      SELECT DISTINCT a.name as a_name, b.name as b_name
+        FROM dogs as a 
+        JOIN dogs as b 
+        JOIN parents 
+       WHERE (SELECT parent FROM parents           WHERE child = a.name)  = (SELECT parent FROM parents           WHERE child = b.name)
+         AND (SELECT size   FROM size_of_dogs as c WHERE a.name = c.name) = (SELECT size   FROM size_of_dogs as c WHERE b.name = c.name)
+         AND a.name < b.name;
 
 -- Sentences about siblings that are the same size
 CREATE TABLE sentences AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT a_name || " and " || b_name || " are " || 
+         (SELECT size from size_of_dogs WHERE name = a_name)
+         || " siblings" 
+    FROM siblings;
