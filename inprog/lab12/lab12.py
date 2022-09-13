@@ -80,7 +80,9 @@ def foldr(link, fn, z):
     >>> foldr(lst, mul, 1) # (3 * (2 * (1 * 1)))
     6
     """
-    "*** YOUR CODE HERE ***"
+    if link.rest is Link.empty:
+        return fn(link.first, z)
+    return fn(link.first, foldr(link.rest, fn, z))
 
 def mapl(lst, fn):
     """ Maps FN on LST
