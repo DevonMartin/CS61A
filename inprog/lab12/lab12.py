@@ -1,3 +1,4 @@
+from ast import Lambda
 from operator import add, sub, mul
 from queue import Empty
 
@@ -90,7 +91,12 @@ def mapl(lst, fn):
     >>> mapl(lst, lambda x: x*x)
     Link(9, Link(4, Link(1)))
     """
-    "*** YOUR CODE HERE ***"
+    new_fn = lambda x, _: fn(x)
+    tmp_lst = lst
+    while tmp_lst:
+        tmp_lst.first = foldr(tmp_lst, new_fn, 0)
+        tmp_lst = tmp_lst.rest
+    return lst
 
 # Account
 class Account(object):
