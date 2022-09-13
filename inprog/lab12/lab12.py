@@ -162,10 +162,19 @@ class CheckingAccount(Account):
     def withdraw(self, amount):
         return Account.withdraw(self, amount + self.withdraw_fee)
 
-    "*** YOUR CODE HERE ***"
+    def deposit_check(self, check):
+        if self.holder == check.payable_to and not check.deposited:
+            check.deposited = True
+            return self.deposit(check.amount)
+        else:
+            print("The police have been notified.")
 
 class Check(object):
-    "*** YOUR CODE HERE ***"
+    
+    def __init__(self, payable_to, amount) -> None:
+        self.payable_to = payable_to
+        self.amount = amount
+        self.deposited = False
 
 
 def foldl(link, fn, z):
